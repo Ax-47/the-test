@@ -7,7 +7,11 @@ import TokenPayloadType from "@/type/token";
 export default function useAuth(cookieName: string = "token") {
   const [payload, setPayload] = useState<TokenPayloadType | null>(null);
   const [loading, setLoading] = useState(true); // เพิ่ม loading state
-
+  const clear = () => {
+    if (typeof document === "undefined") return;
+    document.cookie = `${cookieName}=; Max-Age=0; path=/`;
+    setPayload(null);
+  };
   useEffect(() => {
     if (typeof document === "undefined") return;
     const raw = document.cookie
@@ -31,5 +35,5 @@ export default function useAuth(cookieName: string = "token") {
     }
   }, [cookieName]);
 
-  return { payload, loading };
+  return { payload, loading, clear };
 }
